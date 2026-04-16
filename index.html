@@ -4,44 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#C85A1A">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>Pedidos - Dietética Colibrí</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-
-/* En mobile: escalar todo al doble usando zoom */
-html{
-  font-size:16px;
-}
-
-/* Zoom nativo — funciona en Chrome Android */
-@media (max-width: 767px) {
-  html {
-    zoom: 2;
-  }
-}
-
+html{font-size:18px}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#3A3228;min-height:100vh}
-.phone{width:100%;background:#3A3228;padding-bottom:24px}
+.phone{width:100%;background:#3A3228;padding-bottom:32px}
 
-.header{background:#C85A1A;padding:20px 20px 16px;text-align:center;position:sticky;top:0;z-index:10}
-.header-sub{font-size:11px;color:rgba(255,255,255,0.65);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px}
-.header-title{font-size:28px;font-weight:700;color:white;letter-spacing:2px;line-height:1}
-.header-contact{font-size:12px;color:rgba(255,255,255,0.75);margin-top:5px}
+.header{background:#C85A1A;padding:1.2rem 1.2rem 1rem;text-align:center;position:sticky;top:0;z-index:10}
+.header-sub{font-size:0.65rem;color:rgba(255,255,255,0.65);letter-spacing:0.15rem;text-transform:uppercase;margin-bottom:0.2rem}
+.header-title{font-size:2.2rem;font-weight:700;color:white;letter-spacing:0.15rem;line-height:1}
+.header-contact{font-size:0.7rem;color:rgba(255,255,255,0.75);margin-top:0.3rem}
 
-.section{padding:12px 14px}
+.section{padding:1rem 1.1rem}
 
-.card{background:#6B5A48;border-radius:12px;padding:16px;margin-bottom:12px;border:0.5px solid #7A6A58}
-.card-title{font-size:11px;font-weight:700;color:#C8A87A;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:14px}
+.card{background:#6B5A48;border-radius:0.8rem;padding:1.2rem 1.1rem;margin-bottom:0.9rem;border:1px solid #7A6A58}
+.card-title{font-size:0.65rem;font-weight:700;color:#C8A87A;text-transform:uppercase;letter-spacing:0.1rem;margin-bottom:1rem}
 
-label{font-size:13px;color:#E8D4B8;display:block;margin-bottom:4px;margin-top:12px}
+label{font-size:0.85rem;color:#E8D4B8;display:block;margin-bottom:0.3rem;margin-top:1rem}
 label:first-of-type{margin-top:0}
 
 input,select,textarea{
   width:100%;
-  font-size:14px;
-  padding:10px 12px;
-  border-radius:8px;
-  border:0.5px solid #7A6A58;
+  font-size:1rem;
+  padding:0.75rem 0.85rem;
+  border-radius:0.5rem;
+  border:1px solid #7A6A58;
   background:#4A3A2A;
   color:#F5E6CC;
   outline:none;
@@ -49,91 +38,120 @@ input,select,textarea{
   appearance:none;
   line-height:1.3
 }
-input:focus,select:focus,textarea:focus{border-color:#C85A1A;border-width:1.5px}
+input:focus,select:focus,textarea:focus{border-color:#C85A1A;border-width:2px}
 input::placeholder,textarea::placeholder{color:#8A7A68}
 select{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23C8A87A' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat:no-repeat;
-  background-position:right 12px center;
-  background-size:12px;
-  padding-right:32px
+  background-position:right 0.85rem center;
+  background-size:0.75rem;
+  padding-right:2.5rem
 }
 select option{background:#3A3228;color:#F5E6CC}
-textarea{resize:none;min-height:64px;font-family:inherit}
+textarea{resize:none;min-height:5rem;font-family:inherit}
 
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;margin-top:1rem}
 
 .btn-add{
-  width:100%;padding:12px;
-  font-size:14px;font-weight:700;
-  border-radius:8px;
+  width:100%;padding:0.9rem;
+  font-size:1rem;font-weight:700;
+  border-radius:0.5rem;
   background:#F5E6CC;color:#3A3228;
   border:none;cursor:pointer;
-  margin-top:12px;min-height:44px;
+  margin-top:1rem;min-height:3.2rem;
   transition:opacity 0.15s
 }
 .btn-add:disabled{background:#5A4A38;color:#7A6A58;cursor:not-allowed}
 .btn-add:not(:disabled):active{opacity:0.8}
 
-.item-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid #7A6A58}
+.item-row{display:flex;align-items:center;gap:0.6rem;padding:0.75rem 0;border-bottom:1px solid #7A6A58}
 .item-row:last-child{border-bottom:none}
 .item-info{flex:1;min-width:0}
-.item-name{font-size:13px;font-weight:500;color:#F5E6CC;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.item-detail{font-size:11px;color:#C8A87A;margin-top:2px}
-.item-price{font-size:13px;font-weight:700;color:#C85A1A;flex-shrink:0;white-space:nowrap}
+.item-name{font-size:0.9rem;font-weight:500;color:#F5E6CC;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item-detail{font-size:0.75rem;color:#C8A87A;margin-top:0.15rem}
+.item-price{font-size:0.9rem;font-weight:700;color:#C85A1A;flex-shrink:0;white-space:nowrap}
 .item-del{
-  width:26px;height:26px;min-width:26px;
+  width:1.8rem;height:1.8rem;min-width:1.8rem;
   border-radius:50%;background:#5A3020;
   border:none;cursor:pointer;
-  font-size:15px;color:#C85A1A;
+  font-size:1.1rem;color:#C85A1A;
   display:flex;align-items:center;justify-content:center;
   padding:0;line-height:1
 }
 
-.total-row{display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1.5px solid #C85A1A;margin-top:4px}
-.total-label{font-size:14px;color:#E8D4B8;font-weight:500}
-.total-amount{font-size:22px;font-weight:700;color:#C85A1A}
+.total-row{display:flex;justify-content:space-between;align-items:center;padding-top:0.85rem;border-top:2px solid #C85A1A;margin-top:0.4rem}
+.total-label{font-size:1rem;color:#E8D4B8;font-weight:500}
+.total-amount{font-size:1.8rem;font-weight:700;color:#C85A1A}
 
-.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:#5A3020;color:#F0997B;margin-left:6px;font-weight:700;vertical-align:middle}
+.badge{display:inline-block;font-size:0.65rem;padding:0.2rem 0.55rem;border-radius:0.7rem;background:#5A3020;color:#F0997B;margin-left:0.4rem;font-weight:700;vertical-align:middle}
 
 .btn-send{
-  width:100%;padding:14px;
-  font-size:15px;font-weight:700;
-  border-radius:10px;
+  width:100%;padding:1rem;
+  font-size:1.1rem;font-weight:700;
+  border-radius:0.6rem;
   background:#F5E6CC;color:#3A3228;
   border:none;cursor:pointer;
-  margin-top:6px;min-height:50px;
+  margin-top:0.5rem;min-height:3.5rem;
   transition:opacity 0.15s
 }
 .btn-send:active{opacity:0.85}
 .btn-send:disabled{background:#5A4A38;color:#7A6A58;cursor:not-allowed}
 
 .btn-wa{
-  width:100%;padding:13px;
-  font-size:14px;font-weight:700;
-  border-radius:10px;
+  width:100%;padding:1rem;
+  font-size:1rem;font-weight:700;
+  border-radius:0.6rem;
   background:#25D366;color:white;
   border:none;cursor:pointer;
-  margin-top:10px;min-height:48px
+  margin-top:0.7rem;min-height:3.2rem
 }
 .btn-wa:active{opacity:0.85}
 
 .btn-nuevo{
-  width:100%;padding:12px;
-  font-size:13px;font-weight:500;
-  border-radius:10px;
+  width:100%;padding:0.85rem;
+  font-size:0.9rem;font-weight:500;
+  border-radius:0.6rem;
   background:transparent;color:#F5E6CC;
   border:1px solid #7A6A58;
-  cursor:pointer;margin-top:8px;min-height:44px
+  cursor:pointer;margin-top:0.6rem;min-height:3rem
 }
 
-.confirm-box{text-align:center;padding:28px 16px}
-.confirm-icon{width:56px;height:56px;border-radius:50%;background:#27500A;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:24px;color:#97C459}
-.confirm-title{font-size:18px;font-weight:700;color:#F5E6CC;margin-bottom:8px}
-.confirm-sub{font-size:13px;color:#E8D4B8;margin-bottom:18px;line-height:1.6}
-.resumen-box{background:#4A3A2A;border-radius:8px;border:0.5px solid #7A6A58;padding:12px;text-align:left;margin-bottom:14px;font-size:13px;color:#F5E6CC;line-height:1.9}
+.confirm-box{text-align:center;padding:2rem 1rem}
+.confirm-icon{width:3.5rem;height:3.5rem;border-radius:50%;background:#27500A;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;color:#97C459}
+.confirm-title{font-size:1.3rem;font-weight:700;color:#F5E6CC;margin-bottom:0.5rem}
+.confirm-sub{font-size:0.9rem;color:#E8D4B8;margin-bottom:1rem;line-height:1.6}
+.resumen-box{background:#4A3A2A;border-radius:0.5rem;border:1px solid #7A6A58;padding:0.9rem;text-align:left;margin-bottom:0.9rem;font-size:0.85rem;color:#F5E6CC;line-height:1.9}
 
-.error{font-size:12px;color:#F0997B;margin-top:4px;display:none}
+.error{font-size:0.8rem;color:#F0997B;margin-top:0.3rem;display:none}
+
+/* ── DESKTOP ── */
+@media (min-width: 768px) {
+  html{font-size:16px}
+  body{display:flex;justify-content:center}
+  .phone{max-width:480px}
+  .header{padding:20px 20px 16px}
+  .header-title{font-size:28px}
+  .section{padding:12px 14px}
+  .card{padding:16px;margin-bottom:12px;border-radius:12px}
+  label{font-size:13px;margin-top:12px;margin-bottom:4px}
+  input,select,textarea{font-size:14px;padding:10px 12px;border-radius:8px}
+  .row2{gap:10px;margin-top:10px}
+  .btn-add{font-size:14px;padding:12px;min-height:44px;margin-top:12px}
+  .item-name{font-size:13px}
+  .item-detail{font-size:11px}
+  .item-price{font-size:13px}
+  .item-del{width:26px;height:26px;min-width:26px;font-size:15px}
+  .total-label{font-size:14px}
+  .total-amount{font-size:22px}
+  .badge{font-size:10px;padding:2px 8px}
+  .btn-send{font-size:15px;padding:14px;min-height:50px}
+  .btn-wa{font-size:14px;padding:12px;min-height:46px}
+  .btn-nuevo{font-size:13px;padding:11px;min-height:42px}
+  .confirm-title{font-size:18px}
+  .confirm-sub{font-size:13px}
+  .resumen-box{font-size:13px}
+  .error{font-size:12px}
+}
 </style>
 </head>
 <body>
@@ -231,10 +249,12 @@ textarea{resize:none;min-height:64px;font-family:inherit}
 
 </div>
 <script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjKMRjBzlTBSdDdZ4p6ZVlTl-lipYzjsdrkIDh659GyvPJvAd883N5opIIIu4tYSSayQ/exec';
+
 const PROD={
   frutos:{
     'Almendra Non Pareil':{g250:7000,g500:13000,g1kg:25000},
-    'Avellanas grandes':{g250:11250,g500:21000,g1kg:40000},
+    'Avellanas grandes':{g250:13250,g500:24500,g1kg:47000},
     'Castañas de Cajú Premium':{g250:5250,g500:10000,g1kg:19000},
     'Castañas de Cajú Tostadas y Saladas':{g250:6750,g500:12500,g1kg:24000},
     'Castañas de Pará/ Nuez Boliviana':{g250:12750,g500:23500,g1kg:45000},
@@ -482,24 +502,27 @@ function enviar(){
 
   const datos={nombre,telefono:tel,items,comentario:com};
 
-  google.script.run
-    .withSuccessHandler(function(result){
-      if(result.ok){
-        document.getElementById('resumen-final').innerHTML=resHTML;
-        document.getElementById('confirm-sub').textContent='Gracias '+nombre.split(' ')[0]+'! Tu pedido '+result.numPedido+' fue registrado. Te contactamos a la brevedad.';
-        document.getElementById('vista-pedido').style.display='none';
-        document.getElementById('vista-confirm').style.display='block';
-        window.scrollTo(0,0);
-      } else {
-        alert('Error al registrar: '+result.error);
-        btn.disabled=false;btn.textContent='Confirmar pedido';
-      }
-    })
-    .withFailureHandler(function(err){
-      alert('Error de conexión. Intentá de nuevo.');
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify(datos)
+  })
+  .then(r => r.json())
+  .then(result => {
+    if(result.ok){
+      document.getElementById('resumen-final').innerHTML=resHTML;
+      document.getElementById('confirm-sub').textContent='Gracias '+nombre.split(' ')[0]+'! Tu pedido '+result.numPedido+' fue registrado. Te contactamos a la brevedad.';
+      document.getElementById('vista-pedido').style.display='none';
+      document.getElementById('vista-confirm').style.display='block';
+      window.scrollTo(0,0);
+    } else {
+      alert('Error al registrar: '+(result.error||'Error desconocido'));
       btn.disabled=false;btn.textContent='Confirmar pedido';
-    })
-    .recibirPedido(datos);
+    }
+  })
+  .catch(err => {
+    alert('Error de conexión. Intentá de nuevo.');
+    btn.disabled=false;btn.textContent='Confirmar pedido';
+  });
 }
 
 function abrirWA(){
