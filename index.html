@@ -502,22 +502,15 @@ function enviar(){
 
   const datos={nombre,telefono:tel,items,comentario:com};
 
-  fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    body: JSON.stringify(datos)
-  })
-  .then(r => r.json())
-  .then(result => {
-    if(result.ok){
-      document.getElementById('resumen-final').innerHTML=resHTML;
-      document.getElementById('confirm-sub').textContent='Gracias '+nombre.split(' ')[0]+'! Tu pedido '+result.numPedido+' fue registrado. Te contactamos a la brevedad.';
-      document.getElementById('vista-pedido').style.display='none';
-      document.getElementById('vista-confirm').style.display='block';
-      window.scrollTo(0,0);
-    } else {
-      alert('Error al registrar: '+(result.error||'Error desconocido'));
-      btn.disabled=false;btn.textContent='Confirmar pedido';
-    }
+  const url = APPS_SCRIPT_URL + '?datos=' + encodeURIComponent(JSON.stringify(datos));
+
+fetch(url, {redirect: 'follow', mode: 'no-cors'})
+  .then(() => {
+    document.getElementById('resumen-final').innerHTML=resHTML;
+    document.getElementById('confirm-sub').textContent='Gracias '+nombre.split(' ')[0]+'! Tu pedido fue registrado. Te contactamos a la brevedad.';
+    document.getElementById('vista-pedido').style.display='none';
+    document.getElementById('vista-confirm').style.display='block';
+    window.scrollTo(0,0);
   })
   .catch(err => {
     alert('Error de conexión. Intentá de nuevo.');
