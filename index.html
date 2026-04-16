@@ -502,10 +502,9 @@ function enviar(){
 
   const datos={nombre,telefono:tel,items,comentario:com};
 
-  fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    body: JSON.stringify(datos)
-  })
+const url = APPS_SCRIPT_URL + '?datos=' + encodeURIComponent(JSON.stringify(datos));
+
+fetch(url)
   .then(r => r.json())
   .then(result => {
     if(result.ok){
@@ -523,7 +522,6 @@ function enviar(){
     alert('Error de conexión. Intentá de nuevo.');
     btn.disabled=false;btn.textContent='Confirmar pedido';
   });
-}
 
 function abrirWA(){
   window.open('https://wa.me/5493412297121?text='+encodeURIComponent(window._waMsg||''),'_blank');
