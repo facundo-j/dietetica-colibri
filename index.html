@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#C85A1A">
+<title>Pedidos - Dietética Colibrí</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+/* En mobile: escalar todo al doble usando zoom */
+html{
+  font-size:16px;
+}
+
+/* Zoom nativo — funciona en Chrome Android */
+@media (max-width: 767px) {
+  html {
+    zoom: 2;
+  }
+}
+
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#3A3228;min-height:100vh}
+.phone{width:100%;background:#3A3228;padding-bottom:24px}
+
+.header{background:#C85A1A;padding:20px 20px 16px;text-align:center;position:sticky;top:0;z-index:10}
+.header-sub{font-size:11px;color:rgba(255,255,255,0.65);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px}
+.header-title{font-size:28px;font-weight:700;color:white;letter-spacing:2px;line-height:1}
+.header-contact{font-size:12px;color:rgba(255,255,255,0.75);margin-top:5px}
+
+.section{padding:12px 14px}
+
+.card{background:#6B5A48;border-radius:12px;padding:16px;margin-bottom:12px;border:0.5px solid #7A6A58}
+.card-title{font-size:11px;font-weight:700;color:#C8A87A;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:14px}
+
+label{font-size:13px;color:#E8D4B8;display:block;margin-bottom:4px;margin-top:12px}
+label:first-of-type{margin-top:0}
+
+input,select,textarea{
+  width:100%;
+  font-size:14px;
+  padding:10px 12px;
+  border-radius:8px;
+  border:0.5px solid #7A6A58;
+  background:#4A3A2A;
+  color:#F5E6CC;
+  outline:none;
+  -webkit-appearance:none;
+  appearance:none;
+  line-height:1.3
+}
+input:focus,select:focus,textarea:focus{border-color:#C85A1A;border-width:1.5px}
+input::placeholder,textarea::placeholder{color:#8A7A68}
+select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23C8A87A' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 12px center;
+  background-size:12px;
+  padding-right:32px
+}
+select option{background:#3A3228;color:#F5E6CC}
+textarea{resize:none;min-height:64px;font-family:inherit}
+
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+
+.btn-add{
+  width:100%;padding:12px;
+  font-size:14px;font-weight:700;
+  border-radius:8px;
+  background:#F5E6CC;color:#3A3228;
+  border:none;cursor:pointer;
+  margin-top:12px;min-height:44px;
+  transition:opacity 0.15s
+}
+.btn-add:disabled{background:#5A4A38;color:#7A6A58;cursor:not-allowed}
+.btn-add:not(:disabled):active{opacity:0.8}
+
+.item-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid #7A6A58}
+.item-row:last-child{border-bottom:none}
+.item-info{flex:1;min-width:0}
+.item-name{font-size:13px;font-weight:500;color:#F5E6CC;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item-detail{font-size:11px;color:#C8A87A;margin-top:2px}
+.item-price{font-size:13px;font-weight:700;color:#C85A1A;flex-shrink:0;white-space:nowrap}
+.item-del{
+  width:26px;height:26px;min-width:26px;
+  border-radius:50%;background:#5A3020;
+  border:none;cursor:pointer;
+  font-size:15px;color:#C85A1A;
+  display:flex;align-items:center;justify-content:center;
+  padding:0;line-height:1
+}
+
+.total-row{display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1.5px solid #C85A1A;margin-top:4px}
+.total-label{font-size:14px;color:#E8D4B8;font-weight:500}
+.total-amount{font-size:22px;font-weight:700;color:#C85A1A}
+
+.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:#5A3020;color:#F0997B;margin-left:6px;font-weight:700;vertical-align:middle}
+
+.btn-send{
+  width:100%;padding:14px;
+  font-size:15px;font-weight:700;
+  border-radius:10px;
+  background:#F5E6CC;color:#3A3228;
+  border:none;cursor:pointer;
+  margin-top:6px;min-height:50px;
+  transition:opacity 0.15s
+}
+.btn-send:active{opacity:0.85}
+.btn-send:disabled{background:#5A4A38;color:#7A6A58;cursor:not-allowed}
+
+.btn-wa{
+  width:100%;padding:13px;
+  font-size:14px;font-weight:700;
+  border-radius:10px;
+  background:#25D366;color:white;
+  border:none;cursor:pointer;
+  margin-top:10px;min-height:48px
+}
+.btn-wa:active{opacity:0.85}
+
+.btn-nuevo{
+  width:100%;padding:12px;
+  font-size:13px;font-weight:500;
+  border-radius:10px;
+  background:transparent;color:#F5E6CC;
+  border:1px solid #7A6A58;
+  cursor:pointer;margin-top:8px;min-height:44px
+}
+
+.confirm-box{text-align:center;padding:28px 16px}
+.confirm-icon{width:56px;height:56px;border-radius:50%;background:#27500A;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:24px;color:#97C459}
+.confirm-title{font-size:18px;font-weight:700;color:#F5E6CC;margin-bottom:8px}
+.confirm-sub{font-size:13px;color:#E8D4B8;margin-bottom:18px;line-height:1.6}
+.resumen-box{background:#4A3A2A;border-radius:8px;border:0.5px solid #7A6A58;padding:12px;text-align:left;margin-bottom:14px;font-size:13px;color:#F5E6CC;line-height:1.9}
+
+.error{font-size:12px;color:#F0997B;margin-top:4px;display:none}
+</style>
+</head>
+<body>
+<div class="phone">
+
+<div class="header">
+  <div class="header-sub">Dietética</div>
+  <div class="header-title">COLIBRÍ</div>
+  <div class="header-contact">Rosario · 3412-297121</div>
+</div>
+
+<div class="section" id="vista-pedido">
+
+  <div class="card">
+    <div class="card-title">Tus datos</div>
+    <label>Nombre completo</label>
+    <input type="text" id="inp-nombre" placeholder="Ej: María García" autocomplete="name" />
+    <div class="error" id="err-nombre">Ingresá tu nombre</div>
+    <label>Teléfono</label>
+    <input type="tel" id="inp-tel" placeholder="Ej: 3412-123456" autocomplete="tel" inputmode="tel" />
+    <div class="error" id="err-tel">Ingresá tu teléfono</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Agregar producto <span class="badge" id="badge-count">0 / 10</span></div>
+
+    <label>Categoría</label>
+    <select id="sel-cat" onchange="onCat()">
+      <option value="">— elegí una categoría —</option>
+      <option value="frutos">Frutos Secos</option>
+      <option value="snacks">Snacks Ligeros</option>
+      <option value="cereales">Cereales</option>
+      <option value="semillas">Semillas</option>
+      <option value="legumbres">Legumbres</option>
+      <option value="granola">Granola Mandala Raíz</option>
+      <option value="cerrado">Productos Envasados</option>
+    </select>
+
+    <label>Producto</label>
+    <select id="sel-prod" onchange="onProd()" disabled>
+      <option value="">— elegí un producto —</option>
+    </select>
+
+    <div id="wrap-gram">
+      <label>Gramaje</label>
+      <select id="sel-gram" onchange="onGram()" disabled>
+        <option value="">— elegí el gramaje —</option>
+      </select>
+    </div>
+
+    <div class="row2">
+      <div>
+        <label>Cantidad</label>
+        <input type="number" id="inp-cant" min="1" value="1" inputmode="numeric" style="text-align:center;font-weight:700" />
+      </div>
+      <div>
+        <label>Precio unit.</label>
+        <input type="text" id="inp-precio" readonly placeholder="—" style="color:#C85A1A;font-weight:700;text-align:right;background:#4A3A2A" />
+      </div>
+    </div>
+
+    <button class="btn-add" id="btn-add" onclick="agregarItem()" disabled>+ Agregar al pedido</button>
+    <div class="error" id="err-limite" style="text-align:center">Límite de 10 productos alcanzado</div>
+  </div>
+
+  <div class="card" id="card-resumen" style="display:none">
+    <div class="card-title">Tu pedido</div>
+    <div id="items-list"></div>
+    <div class="total-row">
+      <span class="total-label">Total</span>
+      <span class="total-amount" id="total-display">$0</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Comentario (opcional)</div>
+    <textarea id="inp-comentario" placeholder="Ej: entregar el jueves, sin maní por alergia..."></textarea>
+  </div>
+
+  <button class="btn-send" id="btn-confirmar" onclick="enviar()">Confirmar pedido</button>
+</div>
+
+<div class="section" id="vista-confirm" style="display:none">
+  <div class="card">
+    <div class="confirm-box">
+      <div class="confirm-icon">✓</div>
+      <div class="confirm-title">¡Pedido recibido!</div>
+      <div class="confirm-sub" id="confirm-sub">Gracias. Te contactamos a la brevedad.</div>
+      <div class="resumen-box" id="resumen-final"></div>
+      <button class="btn-wa" onclick="abrirWA()">Enviar también por WhatsApp</button>
+      <button class="btn-nuevo" onclick="nuevoPedido()">Hacer otro pedido</button>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+const PROD={
+  frutos:{
+    'Almendra Non Pareil':{g250:7000,g500:13000,g1kg:25000},
+    'Avellanas grandes':{g250:11250,g500:21000,g1kg:40000},
+    'Castañas de Cajú Premium':{g250:5250,g500:10000,g1kg:19000},
+    'Castañas de Cajú Tostadas y Saladas':{g250:6750,g500:12500,g1kg:24000},
+    'Castañas de Pará/ Nuez Boliviana':{g250:12750,g500:23500,g1kg:45000},
+    'Coco Rallado High Fat':{g250:3500,g500:6500,g1kg:13000},
+    'Coco Rallado Medium Fat':{g250:2750,g500:5000,g1kg:10000},
+    'Maní con Cáscara Boliviano':{g250:1750,g500:3000,g1kg:6000},
+    'Maní Pelado con Sal Premium':{g250:2000,g500:3500,g1kg:7000},
+    'Maní Pelado sin Sal Premium':{g250:2000,g500:3500,g1kg:7000},
+    'Nuez con Cáscara Extra Light':{g250:2750,g500:5000,g1kg:9000},
+    'Nuez Mariposa Extra Light':{g250:6500,g500:12000,g1kg:23000},
+    'Nuez Pecan':{g250:9000,g500:16500,g1kg:32000},
+    'Pistachos con Cáscara':{g250:10750,g500:20000,g1kg:38000},
+    'Mix de Cereales sin Azúcar':{g250:1750,g500:3000,g1kg:6000},
+    'Mix de Semillas':{g250:1500,g500:2500,g1kg:5000},
+    'Mix Europeo con Pasas':{g250:3750,g500:7000,g1kg:14000},
+    'Mix Europeo Premium (avellanas)':{g250:6500,g500:12000,g1kg:23000},
+    'Mix Granada':{g250:3000,g500:5500,g1kg:10000},
+    'Mix Tropical':{g250:4000,g500:7500,g1kg:14000},
+    'Damascos Turcos':{g250:5500,g500:10000,g1kg:19000},
+    'Dátiles Premium':{g250:3000,g500:5500,g1kg:11000},
+    'Higos':{g250:3000,g500:5500,g1kg:11000},
+    'Tomate Desecado':{g250:4750,g500:8500,g1kg:17000},
+    'Pasas de Uva Jumbo':{g250:2250,g500:4000,g1kg:8000},
+    'Arándanos Rojos':{g250:4250,g500:8000,g1kg:15000}
+  },
+  snacks:{
+    'Almohaditas de Chocolate':{g250:2500,g500:4500,g1kg:9000},
+    'Almohaditas de Frutilla':{g250:2250,g500:4500,g1kg:8000},
+    'Almohaditas de Limón':{g250:2250,g500:4500,g1kg:8000},
+    'Almohaditas 2 Salvados':{g250:2500,g500:4500,g1kg:9000},
+    'Almohaditas de Avellanas':{g250:3250,g500:6000,g1kg:11000},
+    'Almohaditas de Avena':{g250:2500,g500:4500,g1kg:9000},
+    'Maíz Inflado con Azúcar':{g250:2000,g500:3500,g1kg:7000},
+    'Maíz Inflado con Estevia':{g250:2000,g500:3500,g1kg:7000},
+    'Copos de Maíz con Azúcar':{g250:2000,g500:3500,g1kg:7000},
+    'Copos de Maíz con Miel Granel':{g250:2000,g500:3500,g1kg:7000},
+    'Maíz Frito Barbacoa':{g250:3500,g500:6500,g1kg:13000},
+    'Maíz Frito Miel Mostaza':{g250:3500,g500:6500,g1kg:13000},
+    'Maíz Frito Salado':{g250:3500,g500:6500,g1kg:13000}
+  },
+  cereales:{
+    'Avena Instantánea':{g250:750,g500:1500,g1kg:3000},
+    'Cebada Perlada':{g250:750,g500:1500,g1kg:3000},
+    'Germen de Trigo':{g250:750,g500:1500,g1kg:3000},
+    'Maíz Pisado Blanco':{g250:1000,g500:2000,g1kg:4000},
+    'Maíz Pisado Colorado':{g250:500,g500:1000,g1kg:2000},
+    'Maíz Pisingallo':{g250:750,g500:1000,g1kg:2000},
+    'Mijo Pelado':{g250:750,g500:1500,g1kg:3000},
+    'Salvado de Avena':{g250:750,g500:1500,g1kg:3000},
+    'Salvado de Trigo Fino/Grueso':{g250:500,g500:1000,g1kg:2000},
+    'Texturizado de Soja Fino':{g250:750,g500:1500,g1kg:3000},
+    'Texturizado de Soja Grueso':{g250:750,g500:1500,g1kg:3000},
+    'Trigo Burgol Especial Fino/Grueso':{g250:1000,g500:2000,g1kg:4000},
+    'Trigo Pelado':{g250:750,g500:1500,g1kg:3000}
+  },
+  semillas:{
+    'Amapola':{g250:4500,g500:8500,g1kg:16000},
+    'Amaranto':{g250:1750,g500:3000,g1kg:6000},
+    'Chía':{g250:2500,g500:4500,g1kg:9000},
+    'Chía Grado 2':{g250:1250,g500:2500,g1kg:5000},
+    'Eneldo':{g250:3250,g500:6000,g1kg:12000},
+    'Fenogreco':{g250:1750,g500:3500,g1kg:6000},
+    'Girasol Pelado':{g250:1250,g500:2500,g1kg:5000},
+    'Lino':{g250:1000,g500:2000,g1kg:3000},
+    'Quinoa':{g250:3000,g500:5500,g1kg:11000},
+    'Quinoa Negra':{g250:3000,g500:5500,g1kg:10000},
+    'Quinoa Roja':{g250:3000,g500:5500,g1kg:10000},
+    'Sesamo Blanco':{g250:2250,g500:4000,g1kg:8000},
+    'Sésamo Integral':{g250:1000,g500:2000,g1kg:4000},
+    'Sesamo Negro':{g250:3000,g500:5500,g1kg:10000},
+    'Zapallo AA':{g250:4750,g500:8500,g1kg:17000},
+    'Zaragatona (psyllium)':{g250:5250,g500:10000,g1kg:19000}
+  },
+  legumbres:{
+    'Arvejas Enteras':{g250:500,g500:1000,g1kg:2000},
+    'Arvejas Partidas':{g250:750,g500:1000,g1kg:2000},
+    'Garbanzos':{g250:750,g500:1500,g1kg:3000},
+    'Lenteja Nacional':{g250:1000,g500:2000,g1kg:3000},
+    'Lentejas Turcas':{g250:2000,g500:3500,g1kg:7000},
+    'Lentejón':{g250:1000,g500:2000,g1kg:4000},
+    'Lupines':{g250:1250,g500:2500,g1kg:5000},
+    'Porotos Aduki':{g250:750,g500:1500,g1kg:3000},
+    'Porotos Alubia':{g250:1250,g500:2000,g1kg:4000},
+    'Porotos Colorados':{g250:1250,g500:2500,g1kg:4000},
+    'Porotos Soja':{g250:750,g500:1000,g1kg:2000},
+    'Porotos Manteca':{g250:1500,g500:2500,g1kg:5000},
+    'Porotos Mung':{g250:750,g500:1500,g1kg:3000},
+    'Porotos Negros':{g250:750,g500:1500,g1kg:3000},
+    'Porotos Pallares':{g250:2000,g500:4000,g1kg:8000},
+    'Porotos Tape Nacional':{g250:1000,g500:1500,g1kg:3000}
+  },
+  granola:{
+    'Granola con Arándanos Sin Azúcar':{g250:null,g500:4500,g1kg:8500},
+    'Granola con Chocolate':{g250:null,g500:4500,g1kg:8500},
+    'Granola Crocante Horneada':{g250:null,g500:4000,g1kg:7500},
+    'Granola Crocante Horneada con Coco':{g250:null,g500:4250,g1kg:7500},
+    'Granola Crocante Horneada Vegana':{g250:null,g500:4000,g1kg:7500},
+    'Granola Horneada sin Pasas':{g250:null,g500:4000,g1kg:7000},
+    'Granola sin Azúcar + Banana Chips':{g250:null,g500:4500,g1kg:8500}
+  },
+  cerrado:{
+    'Pasta de Maní Natural 245 grs':{cerrado:true,precio:2600},
+    'Pasta de Maní Natural 485 grs':{cerrado:true,precio:3500}
+  }
+};
+
+let items=[],precioActual=0;
+function fmt(n){return '$'+Math.round(n).toLocaleString('es-AR');}
+
+function reset(){
+  document.getElementById('sel-cat').value='';
+  const sp=document.getElementById('sel-prod');
+  sp.innerHTML='<option value="">— elegí un producto —</option>';
+  sp.disabled=true;
+  const sg=document.getElementById('sel-gram');
+  sg.innerHTML='<option value="">— elegí el gramaje —</option>';
+  sg.disabled=true;
+  document.getElementById('wrap-gram').style.display='block';
+  document.getElementById('inp-cant').value=1;
+  document.getElementById('inp-precio').value='';
+  document.getElementById('btn-add').disabled=true;
+  precioActual=0;
+}
+
+function onCat(){
+  const cat=document.getElementById('sel-cat').value;
+  const sp=document.getElementById('sel-prod');
+  sp.innerHTML='<option value="">— elegí un producto —</option>';
+  document.getElementById('sel-gram').innerHTML='<option value="">— elegí el gramaje —</option>';
+  sp.disabled=!cat;
+  document.getElementById('sel-gram').disabled=true;
+  document.getElementById('inp-precio').value='';
+  document.getElementById('btn-add').disabled=true;
+  precioActual=0;
+  if(!cat)return;
+  Object.keys(PROD[cat]).forEach(p=>{
+    const o=document.createElement('option');
+    o.value=p;o.textContent=p;sp.appendChild(o);
+  });
+}
+
+function onProd(){
+  const cat=document.getElementById('sel-cat').value;
+  const prod=document.getElementById('sel-prod').value;
+  const sg=document.getElementById('sel-gram');
+  const wg=document.getElementById('wrap-gram');
+  sg.innerHTML='<option value="">— elegí el gramaje —</option>';
+  document.getElementById('inp-precio').value='';
+  document.getElementById('btn-add').disabled=true;
+  precioActual=0;
+  if(!prod)return;
+  const d=PROD[cat][prod];
+  if(d.cerrado){
+    wg.style.display='none';
+    precioActual=d.precio;
+    document.getElementById('inp-precio').value=fmt(d.precio);
+    document.getElementById('btn-add').disabled=items.length>=10;
+  } else {
+    wg.style.display='block';
+    sg.disabled=false;
+    if(d.g250){const o=document.createElement('option');o.value='g250';o.textContent='250g — '+fmt(d.g250);sg.appendChild(o);}
+    if(d.g500){const o=document.createElement('option');o.value='g500';o.textContent='500g — '+fmt(d.g500);sg.appendChild(o);}
+    if(d.g1kg){const o=document.createElement('option');o.value='g1kg';o.textContent='1 kg — '+fmt(d.g1kg);sg.appendChild(o);}
+  }
+}
+
+function onGram(){
+  const cat=document.getElementById('sel-cat').value;
+  const prod=document.getElementById('sel-prod').value;
+  const gram=document.getElementById('sel-gram').value;
+  document.getElementById('inp-precio').value='';
+  document.getElementById('btn-add').disabled=true;
+  precioActual=0;
+  if(!gram)return;
+  precioActual=PROD[cat][prod][gram];
+  document.getElementById('inp-precio').value=fmt(precioActual);
+  document.getElementById('btn-add').disabled=items.length>=10;
+}
+
+function agregarItem(){
+  if(items.length>=10)return;
+  const cat=document.getElementById('sel-cat').value;
+  const prod=document.getElementById('sel-prod').value;
+  const gram=document.getElementById('sel-gram').value;
+  const cant=Math.max(1,parseInt(document.getElementById('inp-cant').value)||1);
+  const d=PROD[cat][prod];
+  const gramLabel=d.cerrado?'':gram==='g250'?'250g':gram==='g500'?'500g':'1 kg';
+  items.push({prod,gramLabel,cant,precio:precioActual,cerrado:!!d.cerrado});
+  renderItems();
+  reset();
+}
+
+function eliminar(i){items.splice(i,1);renderItems();}
+
+function renderItems(){
+  const list=document.getElementById('items-list');
+  const card=document.getElementById('card-resumen');
+  const badge=document.getElementById('badge-count');
+  badge.textContent=items.length+' / 10';
+  document.getElementById('err-limite').style.display=items.length>=10?'block':'none';
+  if(items.length===0){card.style.display='none';return;}
+  card.style.display='block';
+  list.innerHTML='';
+  let total=0;
+  items.forEach((it,i)=>{
+    const sub=it.precio*it.cant;total+=sub;
+    const row=document.createElement('div');
+    row.className='item-row';
+    const det=it.gramLabel?(it.gramLabel+' × '+it.cant+' = '+fmt(sub)):('× '+it.cant+' = '+fmt(sub));
+    row.innerHTML='<div class="item-info"><div class="item-name">'+it.prod+'</div><div class="item-detail">'+det+'</div></div><span class="item-price">'+fmt(sub)+'</span><button class="item-del" onclick="eliminar('+i+')">×</button>';
+    list.appendChild(row);
+  });
+  document.getElementById('total-display').textContent=fmt(total);
+}
+
+function enviar(){
+  const nombre=document.getElementById('inp-nombre').value.trim();
+  const tel=document.getElementById('inp-tel').value.trim();
+  let ok=true;
+  document.getElementById('err-nombre').style.display=nombre?'none':'block';if(!nombre)ok=false;
+  document.getElementById('err-tel').style.display=tel?'none':'block';if(!tel)ok=false;
+  if(!ok)return;
+  if(items.length===0){alert('Agregá al menos un producto al pedido.');return;}
+
+  const btn=document.getElementById('btn-confirmar');
+  btn.disabled=true;btn.textContent='Enviando...';
+
+  let total=0;
+  let resHTML='<strong>'+nombre+'</strong> · '+tel+'<br><br>';
+  let resWA='Hola! Te paso mi pedido:\n\nNombre: '+nombre+'\nTel: '+tel+'\n\n';
+  items.forEach(it=>{
+    const sub=it.precio*it.cant;total+=sub;
+    const linea=it.gramLabel?(it.prod+' '+it.gramLabel+' × '+it.cant):(it.prod+' × '+it.cant);
+    resHTML+=linea+' — <strong>'+fmt(sub)+'</strong><br>';
+    resWA+=linea+' — '+fmt(sub)+'\n';
+  });
+  const com=document.getElementById('inp-comentario').value.trim();
+  if(com){
+    resHTML+='<br><em style="color:#C8A87A">Nota: '+com+'</em>';
+    resWA+='\nNota: '+com;
+  }
+  resHTML+='<br><br><strong>Total: '+fmt(total)+'</strong>';
+  resWA+='\n\nTotal: '+fmt(total);
+  window._waMsg=resWA;
+
+  const datos={nombre,telefono:tel,items,comentario:com};
+
+  google.script.run
+    .withSuccessHandler(function(result){
+      if(result.ok){
+        document.getElementById('resumen-final').innerHTML=resHTML;
+        document.getElementById('confirm-sub').textContent='Gracias '+nombre.split(' ')[0]+'! Tu pedido '+result.numPedido+' fue registrado. Te contactamos a la brevedad.';
+        document.getElementById('vista-pedido').style.display='none';
+        document.getElementById('vista-confirm').style.display='block';
+        window.scrollTo(0,0);
+      } else {
+        alert('Error al registrar: '+result.error);
+        btn.disabled=false;btn.textContent='Confirmar pedido';
+      }
+    })
+    .withFailureHandler(function(err){
+      alert('Error de conexión. Intentá de nuevo.');
+      btn.disabled=false;btn.textContent='Confirmar pedido';
+    })
+    .recibirPedido(datos);
+}
+
+function abrirWA(){
+  window.open('https://wa.me/5493412297121?text='+encodeURIComponent(window._waMsg||''),'_blank');
+}
+
+function nuevoPedido(){
+  items=[];precioActual=0;
+  document.getElementById('inp-nombre').value='';
+  document.getElementById('inp-tel').value='';
+  document.getElementById('inp-comentario').value='';
+  document.getElementById('badge-count').textContent='0 / 10';
+  document.getElementById('card-resumen').style.display='none';
+  document.getElementById('items-list').innerHTML='';
+  reset();
+  document.getElementById('vista-confirm').style.display='none';
+  document.getElementById('vista-pedido').style.display='block';
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
