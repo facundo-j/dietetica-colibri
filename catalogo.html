@@ -300,17 +300,10 @@
 
 <script>
 // ══════════════════════════════════════════════════
-//  CONFIGURACIÓN — solo tocás esto
+//  CONFIGURACIÓN
 // ══════════════════════════════════════════════════
-const SHEET_ID = '1C7N6VRPxoQpRaYdLpLTnbqTm3HlI9feJZJ0fuhtmyzI';
-// ^ Reemplazá con el ID de tu Google Sheet
-// El ID está en la URL: docs.google.com/spreadsheets/d/ESTE_ES_EL_ID/edit
-
+const SHEET_ID   = '1C7N6VRPxoQpRaYdLpLTnbqTm3HlI9feJZJ0fuhtmyzI';
 const SHEET_NAME = 'Lista Publico';
-// ^ El nombre exacto de la pestaña/hoja con los precios
-
-// El sheet debe tener estas columnas (fila 1 = encabezados):
-//   A: Categoría | B: Producto | C: Gramaje | D: Precio
 // ══════════════════════════════════════════════════
 
 const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
@@ -319,30 +312,74 @@ let datos = [];
 let categoriaActiva = 'Todos';
 let busqueda = '';
 
+// La hoja "Lista Publico" tiene:
+//   col 0: Categoría | col 1: Producto | col 2: (vacía) | col 3: Por 250 grs | col 4: Por 500 grs | col 5: Por 1 Kg
+// Los productos cerrados (Pasta de Maní) tienen: col 3: Gramaje | col 4: Precio
+
 async function cargarDatos() {
   try {
     const res = await fetch(URL);
-    if (!res.ok) throw new Error('No se pudo cargar el catálogo');
+    if (!res.ok) throw new Error('No se pudo cargar');
     const text = await res.text();
     const json = JSON.parse(text.replace(/^[^(]+\(/, '').replace(/\);?$/, ''));
     const filas = json.table.rows;
 
-    datos = filas
-      .map(fila => ({
-        categoria: fila.c[0]?.v || '',
-        nombre:    fila.c[1]?.v || '',
-        gramaje:   fila.c[2]?.v || '',
-        precio:    fila.c[3]?.v || 0,
-      }))
-      .filter(d => d.nombre && d.precio);
+    datos = [];
+    let categoriaActual = '';
+
+    filas.forEach(fila => {
+      const c = fila.c;
+      if (!c || c.length < 2) return;
+
+      const col0 = c[0]?.v?.toString().trim() || '';
+      const col1 = c[1]?.v?.toString().trim() || '';
+
+      // Actualizar categoría si la columna A tiene valor
+      if (col0 && col0 !== 'Categoría' && !col0.startsWith('⬇') && !col0.startsWith('*') && col0 !== 'Atentis!') {
+        categoriaActual = col0;
+      }
+
+      if (!col1 || col1 === 'Producto') return;
+
+      const p250  = c[3]?.v;
+      const p500  = c[4]?.v;
+      const p1kg  = c[5]?.v;
+
+      // Producto cerrado: col3 = gramaje texto, col4 = precio
+      if (typeof p250 === 'string' && p250.includes('grs')) {
+        const precio = c[4]?.v;
+        if (precio) {
+          datos.push({ categoria: categoriaActual, nombre: col1, tipo: 'cerrado', gramaje: p250, precio });
+        }
+        return;
+      }
+
+      // Producto a granel: puede tener 250g, 500g, 1kg
+      if (p250) datos.push({ categoria: categoriaActual, nombre: col1, tipo: 'granel', gramaje: '250 g', precio: p250 });
+      if (p500) datos.push({ categoria: categoriaActual, nombre: col1, tipo: 'granel', gramaje: '500 g', precio: p500 });
+      if (p1kg) datos.push({ categoria: categoriaActual, nombre: col1, tipo: 'granel', gramaje: '1 kg',  precio: p1kg });
+    });
+
+    // Agrupar: un item por producto con todos sus gramajes
+    const mapa = new Map();
+    datos.forEach(d => {
+      const key = d.categoria + '||' + d.nombre;
+      if (!mapa.has(key)) {
+        mapa.set(key, { categoria: d.categoria, nombre: d.nombre, tipo: d.tipo, precios: [] });
+      }
+      mapa.get(key).precios.push({ gramaje: d.gramaje, precio: d.precio });
+    });
+
+    datos = [...mapa.values()].filter(d => d.nombre && d.precios.length > 0);
 
     renderFiltros();
     renderCatalogo();
     document.getElementById('actualizacion').style.display = 'block';
   } catch (e) {
+    console.error(e);
     document.getElementById('estado-carga').innerHTML = `
       <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <p>No se pudo cargar el catálogo.<br><small>Revisá la configuración del Sheet.</small></p>`;
+      <p>No se pudo cargar el catálogo.<br><small>Verificá que el Sheet esté publicado (Archivo → Compartir → Publicar en la web).</small></p>`;
   }
 }
 
@@ -399,13 +436,25 @@ function renderCatalogo() {
     <div class="seccion">
       <div class="seccion-titulo">${cat}</div>
       <div class="cards-grid">
-        ${prods.map(p => `
-          <div class="card">
-            <div class="card-nombre">${p.nombre}</div>
-            ${p.gramaje ? `<div class="card-gramaje">${p.gramaje}</div>` : ''}
-            <div class="card-precio">${formatPrecio(p.precio)}</div>
-          </div>
-        `).join('')}
+        ${prods.map(p => {
+          if (p.tipo === 'cerrado') {
+            return `
+              <div class="card">
+                <div class="card-nombre">${p.nombre}</div>
+                <div class="card-gramaje">${p.precios[0].gramaje}</div>
+                <div class="card-precio">${formatPrecio(p.precios[0].precio)}</div>
+              </div>`;
+          }
+          // Granel: mostrar todos los gramajes
+          const preciosHTML = p.precios.map(pr =>
+            `<div class="card-precio">${formatPrecio(pr.precio)}<span class="por-kg">${pr.gramaje}</span></div>`
+          ).join('');
+          return `
+            <div class="card">
+              <div class="card-nombre">${p.nombre}</div>
+              ${preciosHTML}
+            </div>`;
+        }).join('')}
       </div>
     </div>
   `).join('');
