@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#8B4513">
+<title>Pedidos - Dietética Colibrí</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --terracota: #D2691E;
+  --marron-oscuro: #5D4037;
+  --verde-oliva: #556B2F;
+  --crema-calido: #FFF9F1;
+  --blanco-hueso: #FFFFFF;
+  --sombra: rgba(93, 64, 55, 0.1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--crema-calido);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(210, 105, 30, 0.05) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(85, 107, 47, 0.05) 0%, transparent 25%);
+  background-attachment: fixed;
+  color: var(--marron-oscuro);
+}
+
+.phone { width: 100%; max-width: 480px; margin: 0 auto; min-height: 100vh; padding-bottom: 40px; }
+
+.header {
+  background: linear-gradient(135deg, var(--marron-oscuro), #3E2723);
+  padding: 30px 20px;
+  text-align: center;
+  color: var(--blanco-hueso);
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  box-shadow: 0 4px 12px var(--sombra);
+}
+
+.logo-container { font-size: 45px; margin-bottom: 5px; }
+.header-title { font-family: 'Playfair Display', serif; font-size: 34px; letter-spacing: 2px; line-height: 1; }
+
+.section { padding: 20px 16px; }
+
+.card {
+  background: var(--blanco-hueso);
+  border-radius: 18px;
+  padding: 22px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 15px var(--sombra);
+  border: 1px solid rgba(93, 64, 55, 0.05);
+  overflow: hidden;
+}
+
+.card-title {
+  font-size: 13px; font-weight: 600; color: var(--terracota);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;
+  border-bottom: 1px solid var(--crema-calido); padding-bottom: 5px;
+}
+
+label { font-size: 14px; font-weight: 600; margin-bottom: 6px; display: block; margin-top: 15px; }
+label:first-of-type { margin-top: 0; }
+
+input, select, textarea {
+  width: 100%; font-family: inherit; font-size: 15px; padding: 12px;
+  border-radius: 10px; border: 1.5px solid #E0E0E0; background: #FAFAFA;
+  color: var(--marron-oscuro); outline: none; transition: all 0.3s;
+}
+
+input:focus, select:focus, textarea:focus { border-color: var(--terracota); background: #FFF; }
+
+.btn-add {
+  width: 100%; padding: 14px; background: var(--verde-oliva); color: white;
+  border: none; border-radius: 12px; font-weight: 600; font-size: 15px;
+  margin-top: 15px; cursor: pointer;
+}
+
+.btn-add:disabled { background: #BDBDBD; }
+
+.item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #F0F0F0; }
+.item-info { flex: 1; }
+.item-name { font-weight: 600; font-size: 14px; }
+.item-price { font-weight: 700; color: var(--terracota); margin-left: 10px; }
+.item-del { background: #FDECEA; color: #D32F2F; border: none; width: 28px; height: 28px; border-radius: 50%; margin-left: 10px; cursor: pointer; }
+
+.total-row { margin-top: 15px; padding-top: 15px; border-top: 2px solid var(--terracota); display: flex; justify-content: space-between; align-items: center; }
+.total-amount { font-size: 26px; font-weight: 700; color: var(--terracota); }
+
+.btn-send {
+  width: 100%; padding: 18px; background: var(--terracota); color: white;
+  border: none; border-radius: 15px; font-size: 17px; font-weight: 700;
+  cursor: pointer; margin-top: 10px;
+}
+
+.error { color: #D32F2F; font-size: 12px; margin-top: 5px; display: none; }
+.badge { background: var(--crema-calido); color: var(--terracota); padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 5px; border: 1px solid var(--terracota); }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <header class="header">
+    <div class="logo-container">🐦‍⬛</div>
+    <div class="header-sub">Dietética Natural</div>
+    <h1 class="header-title">COLIBRÍ</h1>
+  </header>
+
+  <div class="section" id="vista-pedido">
+    <div class="card">
+      <div class="card-title">Mis Datos</div>
+      <label>Nombre completo</label>
+      <input type="text" id="inp-nombre" placeholder="Tu nombre..." autocomplete="name">
+      <div class="error" id="err-nombre">Ingresá tu nombre</div>
+      <label>Teléfono</label>
+      <input type="tel" id="inp-tel" placeholder="Tu WhatsApp..." autocomplete="tel">
+      <div class="error" id="err-tel">Ingresá tu teléfono</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Agregar Producto <span class="badge" id="badge-count">0 / 10</span></div>
+      <label>Categoría</label>
+      <select id="sel-cat" onchange="onCat()"><option value="">Cargando...</option></select>
+      <label>Producto</label>
+      <select id="sel-prod" onchange="onProd()" disabled><option value="">—</option></select>
+      <div id="wrap-gram">
+        <label>Gramaje</label>
+        <select id="sel-gram" onchange="onGram()" disabled><option value="">—</option></select>
+      </div>
+      <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <div style="flex: 1;">
+          <label>Cantidad</label>
+          <input type="number" id="inp-cant" min="1" value="1">
+        </div>
+        <div style="flex: 1;">
+          <label>Precio</label>
+          <input type="text" id="inp-precio" readonly style="background: #EEE; font-weight: 700;">
+        </div>
+      </div>
+      <button class="btn-add" id="btn-add" onclick="agregarItem()" disabled>+ Agregar al pedido</button>
+      <div class="error" id="err-limite" style="text-align:center">Límite de 10 productos alcanzado</div>
+    </div>
+
+    <div class="card" id="card-resumen" style="display:none">
+      <div class="card-title">Resumen del Pedido</div>
+      <div id="items-list"></div>
+      <div class="total-row">
+        <span>Total</span>
+        <span class="total-amount" id="total-display">$0</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Comentario Adicional</div>
+      <textarea id="inp-comentario" placeholder="Alguna aclaración..."></textarea>
+    </div>
+
+    <button class="btn-send" id="btn-confirmar" onclick="enviar()">Confirmar Pedido</button>
+  </div>
+
+  <div class="section" id="vista-confirm" style="display:none">
+    <div class="card" style="text-align:center">
+      <div style="font-size: 50px; color: var(--verde-oliva);">✓</div>
+      <h2 style="font-family: 'Playfair Display'; margin-bottom: 10px;">¡Pedido Recibido!</h2>
+      <p id="confirm-sub" style="font-size: 14px; margin-bottom: 20px;"></p>
+      <div id="resumen-final" style="text-align: left; background: var(--crema-calido); padding: 15px; border-radius: 10px; font-size: 13px;"></div>
+      <button class="btn-send" style="background: #25D366; margin-top: 20px;" onclick="abrirWA()">Enviar por WhatsApp</button>
+      <button onclick="nuevoPedido()" style="background: none; border: none; color: var(--marron-oscuro); margin-top: 15px; cursor: pointer; text-decoration: underline;">Hacer otro pedido</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// USAR TU SHEET_ID REAL AQUÍ
+const SHEET_ID = '1C7N6VRPxoQpRaYdLpLTnbqTm3HlI9feJZJ0fuhtmyzI';
+const SHEET_NAME = 'Lista Publico';
+
+let PROD = {};
+let items = [], precioActual = 0;
+
+async function cargarProd() {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+  const res = await fetch(url);
+  const text = await res.text();
+  const json = JSON.parse(text.replace(/^[^(]+\(/, '').replace(/\);?$/, ''));
+  const filas = json.table.rows;
+  PROD = {};
+  const catKeys = {'Frutos Secos':'frutos','Snakcs Ligeros':'snacks','Cereales':'cereales','Semillas':'semillas','Legumbres':'legumbres','Granola Mandala Raíz':'granola','Pasta de Maní':'cerrado'};
+  let catActual = '';
+  filas.forEach(f => {
+    const c = f.c; if(!c || c.length < 2) return;
+    const col0 = c[0]?.v?.toString().trim() || '';
+    const col1 = c[1]?.v?.toString().trim() || '';
+    if(col0 && col0 !== 'Categoría' && !col0.startsWith('⬇')) catActual = col0;
+    if(!col1 || col1 === 'Producto') return;
+    const key = catKeys[catActual] || catActual.toLowerCase().replace(/\s/g,'_');
+    if(!PROD[key]) PROD[key] = {};
+    const p250 = c[3]?.v, p500 = c[4]?.v, p1kg = c[5]?.v;
+    if(typeof p250 === 'string' && p250.includes('grs')){
+      if(c[4]?.v) PROD[key][col1] = { cerrado: true, precio: c[4].v };
+    } else {
+      const entry = {};
+      if(p250) entry.g250 = p250;
+      if(p500) entry.g500 = p500;
+      if(p1kg) entry.g1kg = p1kg;
+      if(Object.keys(entry).length) PROD[key][col1] = entry;
+    }
+  });
+}
+
+function poblarCategorias() {
+  const sel = document.getElementById('sel-cat');
+  sel.innerHTML = '<option value="">— elegí una categoría —</option>';
+  Object.keys(PROD).forEach(k => {
+    const o = document.createElement('option'); o.value = k; o.textContent = k; sel.appendChild(o);
+  });
+}
+
+function fmt(n) { return '$' + Math.round(n).toLocaleString('es-AR'); }
+
+function onCat() {
+  const cat = document.getElementById('sel-cat').value;
+  const sp = document.getElementById('sel-prod');
+  sp.innerHTML = '<option value="">— producto —</option>';
+  sp.disabled = !cat;
+  if(!cat) return;
+  Object.keys(PROD[cat]).forEach(p => {
+    const o = document.createElement('option'); o.value = p; o.textContent = p; sp.appendChild(o);
+  });
+}
+
+function onProd() {
+  const cat = document.getElementById('sel-cat').value, prod = document.getElementById('sel-prod').value;
+  const sg = document.getElementById('sel-gram'), wg = document.getElementById('wrap-gram');
+  sg.innerHTML = '<option value="">— gramaje —</option>';
+  if(!prod) return;
+  const d = PROD[cat][prod];
+  if(d.cerrado) {
+    wg.style.display = 'none'; precioActual = d.precio;
+    document.getElementById('inp-precio').value = fmt(d.precio);
+    document.getElementById('btn-add').disabled = false;
+  } else {
+    wg.style.display = 'block'; sg.disabled = false;
+    if(d.g250) sg.innerHTML += `<option value="g250">250g — ${fmt(d.g250)}</option>`;
+    if(d.g500) sg.innerHTML += `<option value="g500">500g — ${fmt(d.g500)}</option>`;
+    if(d.g1kg) sg.innerHTML += `<option value="g1kg">1 kg — ${fmt(d.g1kg)}</option>`;
+  }
+}
+
+function onGram() {
+  const cat = document.getElementById('sel-cat').value, prod = document.getElementById('sel-prod').value, gram = document.getElementById('sel-gram').value;
+  if(!gram) return;
+  precioActual = PROD[cat][prod][gram];
+  document.getElementById('inp-precio').value = fmt(precioActual);
+  document.getElementById('btn-add').disabled = false;
+}
+
+function agregarItem() {
+  const cat = document.getElementById('sel-cat').value, prod = document.getElementById('sel-prod').value, gram = document.getElementById('sel-gram').value;
+  const cant = parseInt(document.getElementById('inp-cant').value) || 1;
+  items.push({ prod, gram: gram || 'Unidad', cant, precio: precioActual });
+  render(); resetInputs();
+}
+
+function resetInputs() {
+  document.getElementById('sel-prod').disabled = true;
+  document.getElementById('sel-gram').disabled = true;
+  document.getElementById('inp-precio').value = '';
+  document.getElementById('btn-add').disabled = true;
+  document.getElementById('sel-cat').value = '';
+}
+
+function render() {
+  const list = document.getElementById('items-list'), card = document.getElementById('card-resumen');
+  if(!items.length) { card.style.display = 'none'; return; }
+  card.style.display = 'block'; list.innerHTML = '';
+  let total = 0;
+  items.forEach((it, i) => {
+    const sub = it.precio * it.cant; total += sub;
+    list.innerHTML += `<div class="item-row">
+      <div class="item-info"><div class="item-name">${it.prod}</div><div class="item-detail">${it.gram} x ${it.cant}</div></div>
+      <div class="item-price">${fmt(sub)}</div>
+      <button class="item-del" onclick="eliminar(${i})">×</button>
+    </div>`;
+  });
+  document.getElementById('total-display').textContent = fmt(total);
+  document.getElementById('badge-count').textContent = `${items.length} / 10`;
+}
+
+function eliminar(i) { items.splice(i, 1); render(); }
+
+function enviar() {
+  const nombre = document.getElementById('inp-nombre').value;
+  if(!nombre || !items.length) { alert("Completa tu nombre y agrega productos"); return; }
+  
+  let msg = `Hola! Soy ${nombre}. Mi pedido:\n\n`;
+  let total = 0;
+  items.forEach(it => {
+    const sub = it.precio * it.cant; total += sub;
+    msg += `• ${it.prod} (${it.gram}) x${it.cant}: ${fmt(sub)}\n`;
+  });
+  msg += `\nTotal: ${fmt(total)}`;
+  window._waMsg = msg;
+  
+  document.getElementById('confirm-sub').textContent = `Gracias ${nombre}! Tu pedido fue registrado.`;
+  document.getElementById('resumen-final').innerText = msg;
+  document.getElementById('vista-pedido').style.display = 'none';
+  document.getElementById('vista-confirm').style.display = 'block';
+}
+
+function abrirWA() { window.open(`https://wa.me/5493412297121?text=${encodeURIComponent(window._waMsg)}`, '_blank'); }
+
+function nuevoPedido() { location.reload(); }
+
+(async () => {
+  await cargarProd();
+  poblarCategorias();
+  document.getElementById('btn-confirmar').disabled = false;
+})();
+</script>
+</body>
+</html>
