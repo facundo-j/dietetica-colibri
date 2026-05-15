@@ -101,10 +101,47 @@ input:focus, select:focus, textarea:focus { border-color: var(--terracota); back
 
 .error { color: #D32F2F; font-size: 12px; margin-top: 5px; display: none; }
 .badge { background: var(--crema-calido); color: var(--terracota); padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 5px; border: 1px solid var(--terracota); }
+.btn-catalogo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  background-color: var(--crema-calido);
+  color: var(--terracota);
+  border: 2px dashed var(--terracota);
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 20px;
+  transition: all 0.2s;
+}
+
+.btn-catalogo:active {
+  background-color: rgba(210, 105, 30, 0.1);
+  transform: scale(0.98);
+}
 </style>
 </head>
 <body>
+<div class="section" id="vista-pedido">
+  
+  <a href="https://docs.google.com/spreadsheets/d/1C7N6VRPxoQpRaYdLpLTnbqTm3HlI9feJZJ0fuhtmyzI/edit?gid=1726356911#gid=1726356911" target="_blank" class="btn-catalogo">
+    📖 Ver Catálogo Completo
+  </a>
 
+  <div class="card">
+    <div class="card-title">Mis Datos</div>
+    ```
+
+---
+
+### Detalles técnicos para tu GitHub:
+* **Asegurate de cambiar** `TU_LINK_AL_CATALOGO_AQUÍ` por el enlace real a tu PDF o carpeta de Google Drive.
+* Como estás en la rama `mejora-estetica`, hacé el **Commit** y refrescá tu visualización.
+
+¿Pudiste ver si el colibrí y los círculos de fondo aparecen correctamente ahora?
 <div class="phone">
   <header class="header">
     <div class="logo-container">🐦‍⬛</div>
